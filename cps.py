@@ -13,7 +13,7 @@ def add_business_days(start_date, days):
     return current_date
 
 # Streamlit UI
-st.title("Critical Path Schedule (CPS) Generator with Gantt Chart")
+st.title("Critical Path Schedule (CPS) Generator")
 
 # Input for base date
 base_date = st.date_input("Select the base date (e.g., briefing day)", datetime.now())
