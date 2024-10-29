@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-import plotly.express as px
 
 # Function to calculate dates based on business days
 def add_business_days(start_date, days):
@@ -13,7 +12,7 @@ def add_business_days(start_date, days):
     return current_date
 
 # Streamlit UI
-st.title("Critical Path Schedule (CPS) Generator with Gantt Chart")
+st.title("Critical Path Schedule (CPS) Generator")
 
 # Input for base date
 base_date = st.date_input("Select the base date (e.g., briefing day)", datetime.now())
@@ -39,32 +38,14 @@ for milestone, days_after in milestones.items():
         milestone_date = add_business_days(base_date, days_after)
     else:
         milestone_date = base_date + timedelta(days=days_after)
-    end_date = milestone_date + timedelta(days=1)  # Define each milestone as a 1-day task for visualization
-    schedule_data.append((milestone, days_after, milestone_date, end_date))
+    schedule_data.append((milestone, days_after, milestone_date))
 
 # Create DataFrame
-schedule_df = pd.DataFrame(schedule_data, columns=["Milestone", "Days After Base Date", "Start Date", "End Date"])
+schedule_df = pd.DataFrame(schedule_data, columns=["Milestone", "Days After Base Date", "Date"])
 
 # Display the schedule
 st.subheader("Generated Schedule")
 st.write(schedule_df)
-
-# Gantt Chart
-st.subheader("Gantt Chart Visualization")
-fig = px.timeline(
-    schedule_df,
-    x_start="Start Date",
-    x_end="End Date",
-    y="Milestone",
-    title="Project Schedule Gantt Chart",
-)
-fig.update_yaxes(categoryorder="total ascending")  # Sort tasks top to bottom
-fig.update_layout(
-    xaxis_title="Date",
-    yaxis_title="Milestone",
-    margin=dict(l=0, r=0, t=50, b=0)
-)
-st.plotly_chart(fig)
 
 # Download option
 csv = schedule_df.to_csv(index=False)
